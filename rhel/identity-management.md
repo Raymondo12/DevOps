@@ -15,10 +15,9 @@ Direct integration allows RHEL systems to authenticate users against Microsoft E
    - Sync users from Entra ID to Domain Services.
 
 2. **Join RHEL to Entra Domain Services**:
-   - Install required packages: `sudo yum install adcli sssd authconfig krb5-workstation`.
-   - Configure SSSD (System Security Services Daemon) for LDAP authentication against Entra Domain Services.
-   - Use `adcli join` to join the domain: `sudo adcli join -D <domain> -U <admin>`.
-   - Update `/etc/sssd/sssd.conf` with LDAP settings and restart SSSD.
+   - Install required packages: `yum/dnf install samba-common-tools realmd oddjob oddjob-mkhomedir sssd adcli krb5-workstation`.
+   - Configure SSSD (System Security Services Daemon) uisng realm `realm discover example.com`.
+   - Use `realm join example.com -U username --membership-software=adcli -vvv`.
 
 3. **Direct SSO (Preview/Alternative Path)**:
    - For RHEL 9+, use Microsoft's SSO for Linux extension (tech preview in RHEL 8.10/9.5).
