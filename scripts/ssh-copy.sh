@@ -3,6 +3,8 @@
 # Script to add a public key to /home/ansible/.ssh/authorized_keys
 # and set the correct permissions
 
+#This script is added by ray
+
 PUBLIC_KEY="this is my public key"
 ANSIBLE_HOME="/home/ansible"
 SSH_DIR="${ANSIBLE_HOME}/.ssh"
