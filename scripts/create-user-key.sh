@@ -1,9 +1,9 @@
 #!/bin/bash
-#curl -fsSL https://raw.githubusercontent.com/waqasahmed055/DevOpsLinux/edit/main/create-user.sh -o create-user.sh
-#chmod +x create-user.sh
-#sudo ./create-user.sh
-# todjitest User Setup Script
-# This script sets up an todjitest user with SSH key authentication
+curl -fsSL https://raw.githubusercontent.com/Raymondo12/DevOps/refs/heads/main/scripts/create-user-key.sh -o create-user.sh
+chmod +x create-user.sh
+sudo ./create-user.sh
+# ansible User Setup Script
+# This script sets up an ansible user with SSH key authentication
 
 set -e  # Exit on any error
 
@@ -33,7 +33,7 @@ print_error() {
 
 # ============================================================
 # REPLACE THIS WITH YOUR ACTUAL CONTROLLER'S PUBLIC KEY
-# Run: cat /home/todjitest/.ssh/id_rsa.pub  (on the controller)
+# Run: cat /home/ansible/.ssh/id_rsa.pub  (on the controller)
 # ============================================================
 CONTROLLER_PUBLIC_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCirrZa1ikNjfqvUcF30eyTdGjNnQpTDEEsXSZjHkKnjpfQzSzLpMqfPksdUU6gyRBPiPMMTGZtrSABZGb5s9lVNaIXxeoLlPZHUqn6HJzYRRspcaDxuTgMI/Zy+LMFcza/HYDpWtCWRNJl1ffzFHAHqzgr+gQ/kcMmfjCfr6yxhYJmf8zlBgBQDKlK5u1r4CdqOjU8rVZvgaW9IPv+jUgqNWo3Uc/C7XD5JyCUnPMvU/+SzTLx1AOJ76qIYN+WqDAq7SR7BmKDENZB/UR9RX9hg3CMCE0BK8ysndYeJ3IWdMUGX6BpaGUNFtmbD3wUXyd51FSOCs6prvefLQOwno03fEXtgJ2pgY23Doo1Trg+CJmA1kwJzixOu2koRn1dzGfrFSRaWqdRx17jzkZaZnSudhso7fKkQdTrEsJxzN7LpwN9jnQj0QeiLhg2VgFIyB6ATFQbvbDcVX1V6jHyLLPRa7uys4TPxFnOIv2bI5o0Wc9qbFNFgkQpv++3CI35c3gvxgVQKw+R9Q6PHKqxEbr4qzm4SUSjJOG2pvzMACd6w8O60mz3qE8wpHK4ggQH4ctwHv/9LwoiSr/pfjV2NYZVR+j69NlkHDR6+DmlliK6wLjaJ93OdZOfxwtRZCXmQKs4LGVugcDt1bHOYFbqKKoOeDlrNBfA1CiD+zFpz8BeJw== ansible@controller"
 
@@ -62,9 +62,9 @@ file_exists() {
     [[ -f "$1" ]]
 }
 
-# Create todjitest user
-create_todjitest_user() {
-    local username="todjitest"
+# Create ansible user
+create_ansible_user() {
+    local username="ansible"
 
     if user_exists "$username"; then
         print_warning "User '$username' already exists, skipping user creation"
@@ -80,12 +80,12 @@ create_todjitest_user() {
     fi
 }
 
-# Set password for todjitest user
-set_todjitest_password() {
-    local username="todjitest"
+# Set password for ansible user
+set_ansible_password() {
+    local username="ansible"
 
     print_status "Setting password for user '$username'..."
-    if echo "todjitest:UneeD2024" | chpasswd; then
+    if echo "ansible:UneeD2024" | chpasswd; then
         print_success "Password set for user '$username'"
     else
         print_error "Failed to set password for user '$username'"
@@ -95,7 +95,7 @@ set_todjitest_password() {
 
 # Create .ssh directory
 create_ssh_directory() {
-    local username="todjitest"
+    local username="ansible"
     local home_dir="/home/$username"
     local ssh_dir="$home_dir/.ssh"
 
@@ -125,7 +125,7 @@ create_ssh_directory() {
 
 # Copy controller's public key to authorized_keys
 setup_authorized_keys() {
-    local username="todjitest"
+    local username="ansible"
     local ssh_dir="/home/$username/.ssh"
     local auth_keys="$ssh_dir/authorized_keys"
 
@@ -159,9 +159,9 @@ setup_authorized_keys() {
     print_success "Set permissions 600 on authorized_keys"
 }
 
-# Add todjitest user to sudoers
+# Add ansible user to sudoers
 setup_sudo_access() {
-    local username="todjitest"
+    local username="ansible"
     local sudoers_file="/etc/sudoers.d/$username"
 
     print_status "Setting up sudo access for '$username'..."
@@ -199,26 +199,26 @@ setup_sudo_access() {
 
 # Main execution
 main() {
-    print_status "Starting todjitest user setup script..."
+    print_status "Starting ansible user setup script..."
 
     check_root
-    create_todjitest_user
-    set_todjitest_password
+    create_ansible_user
+    set_ansible_password
     create_ssh_directory
     setup_authorized_keys
     setup_sudo_access
 
-    print_success "todjitest user setup completed successfully!"
+    print_success "ansible user setup completed successfully!"
     print_status "=== SETUP SUMMARY ==="
-    print_status "Username: todjitest"
+    print_status "Username: ansible"
     print_status "Password: UneeD2024"
-    print_status "Home directory: /home/todjitest"
-    print_status "SSH directory: /home/todjitest/.ssh"
-    print_status "Authorized keys: /home/todjitest/.ssh/authorized_keys (permissions: 600)"
+    print_status "Home directory: /home/ansible"
+    print_status "SSH directory: /home/ansible/.ssh"
+    print_status "Authorized keys: /home/ansible/.ssh/authorized_keys (permissions: 600)"
     print_status "Sudo access: Enabled (NOPASSWD)"
     print_status "===================="
-    print_status "You can now switch to todjitest user with: su - todjitest"
-    print_status "Or login via SSH: ssh todjitest@<slave-ip>"
+    print_status "You can now switch to ansible user with: su - ansible"
+    print_status "Or login via SSH: ssh ansible@<slave-ip>"
 }
 
 main "$@"
